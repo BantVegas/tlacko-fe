@@ -1,4 +1,5 @@
-// Hlavný zoznam produktov (friendly emoji a popisy)
+import { useState } from "react";
+
 const glassItems = [
   { title: "Veselé zvieratko", desc: "Roztomilé 3D hračky pre najmenších.", icon: "🦊" },
   { title: "Robot", desc: "Interaktívny robot z 3D tlačiarne.", icon: "🤖" },
@@ -10,7 +11,16 @@ const glassItems = [
   { title: "Kreatívny set", desc: "Sada pre vlastnú tvorbu.", icon: "🎨" },
 ];
 
+const NAV = [
+  { name: "Domov", href: "#" },
+  { name: "Produkty", href: "#" },
+  { name: "O nás", href: "#" },
+  { name: "Kontakt", href: "#" },
+];
+
 export default function App() {
+  const [open, setOpen] = useState(false);
+
   return (
     <div
       className="min-h-screen flex flex-col relative"
@@ -21,22 +31,57 @@ export default function App() {
         backgroundAttachment: "fixed",
       }}
     >
-      {/* Celostránkový tmavý overlay pre čitateľnosť */}
+      {/* Celostránkový overlay */}
       <div className="absolute inset-0 bg-black/70 -z-10" />
 
-      {/* Navigácia */}
+      {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full bg-white/70 backdrop-blur shadow z-30">
         <div className="container mx-auto flex items-center justify-between px-6 py-3">
-          <span className="text-2xl font-bold text-blue-600 tracking-tight">
-            tlacko.sk
-          </span>
-          <div className="space-x-6 font-semibold text-gray-700">
-            <a href="#" className="hover:text-blue-600 transition">Domov</a>
-            <a href="#" className="hover:text-blue-600 transition">Produkty</a>
-            <a href="#" className="hover:text-blue-600 transition">O nás</a>
-            <a href="#" className="hover:text-blue-600 transition">Kontakt</a>
+          <span className="text-2xl font-bold text-blue-600 tracking-tight">tlacko.sk</span>
+          {/* Desktop nav */}
+          <div className="hidden md:flex space-x-6 font-semibold text-gray-700">
+            {NAV.map((item) => (
+              <a key={item.name} href={item.href} className="hover:text-blue-600 transition">
+                {item.name}
+              </a>
+            ))}
           </div>
+          {/* Hamburger */}
+          <button
+            className="md:hidden flex flex-col items-center justify-center w-10 h-10"
+            aria-label="Open menu"
+            onClick={() => setOpen(true)}
+          >
+            <span className="block w-7 h-1 bg-blue-700 rounded-full mb-1"></span>
+            <span className="block w-7 h-1 bg-blue-700 rounded-full mb-1"></span>
+            <span className="block w-7 h-1 bg-blue-700 rounded-full"></span>
+          </button>
         </div>
+
+        {/* Overlay menu */}
+        {open && (
+          <div className="fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center">
+            <button
+              className="absolute top-6 right-8 text-white text-3xl"
+              aria-label="Close menu"
+              onClick={() => setOpen(false)}
+            >
+              &times;
+            </button>
+            <div className="flex flex-col space-y-8 text-white text-2xl font-semibold">
+              {NAV.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="hover:text-blue-400 transition"
+                >
+                  {item.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero sekcia */}
@@ -49,7 +94,7 @@ export default function App() {
         </p>
       </section>
 
-      {/* Produkty v glassmorph oknách */}
+      {/* Glassmorph sekcia */}
       <section className="relative z-10 py-16 px-2 md:px-0">
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {glassItems.map((item, idx) => (
@@ -70,6 +115,8 @@ export default function App() {
           ))}
         </div>
       </section>
+
+      <div className="flex-grow"></div>
 
       {/* Footer */}
       <footer className="bg-white/70 backdrop-blur py-4 mt-8 shadow-inner">
