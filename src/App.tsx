@@ -1,4 +1,3 @@
-import React from "react";
 
 const glassItems = [
   { title: "Veselé zvieratko", desc: "Roztomilé 3D hračky pre najmenších.", icon: "🦊" },
