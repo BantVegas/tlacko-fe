@@ -47,16 +47,21 @@ export default function Navbar() {
       </div>
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden fixed inset-0 z-40 bg-blue-900/80 backdrop-blur-lg flex flex-col items-center pt-24 space-y-8 transition-all">
-          <Link onClick={() => setOpen(false)} to="/" className="text-white text-xl font-semibold">Domov</Link>
-          <Link onClick={() => setOpen(false)} to="/app/antistres" className="text-white text-xl font-semibold">Antistres</Link>
-          <Link onClick={() => setOpen(false)} to="/app/auticka" className="text-white text-xl font-semibold">Autíčka</Link>
-          <Link onClick={() => setOpen(false)} to="/app/dekoracie" className="text-white text-xl font-semibold">Dekorácie</Link>
-          <Link onClick={() => setOpen(false)} to="/app/figurky" className="text-white text-xl font-semibold">Figúrky</Link>
-          <Link onClick={() => setOpen(false)} to="/app/zvieratka" className="text-white text-xl font-semibold">Zvieratká</Link>
-          <Link onClick={() => setOpen(false)} to="/podmienky" className="text-white text-xl font-semibold">Podmienky</Link>
-          <Link onClick={() => setOpen(false)} to="/gdpr" className="text-white text-xl font-semibold">GDPR</Link>
-          <Link onClick={() => setOpen(false)} to="/kontakt" className="text-white text-xl font-semibold">Kontakt</Link>
+        <div className="md:hidden fixed inset-0 z-40 flex items-center justify-center">
+          {/* Overlay podklad */}
+          <div className="absolute inset-0 bg-blue-900/90 backdrop-blur-lg"></div>
+          {/* Menu linky */}
+          <div className="relative flex flex-col items-center pt-24 space-y-8 w-full">
+            <Link onClick={() => setOpen(false)} to="/" className="text-white text-xl font-semibold drop-shadow">Domov</Link>
+            <Link onClick={() => setOpen(false)} to="/app/antistres" className="text-white text-xl font-semibold drop-shadow">Antistres</Link>
+            <Link onClick={() => setOpen(false)} to="/app/auticka" className="text-white text-xl font-semibold drop-shadow">Autíčka</Link>
+            <Link onClick={() => setOpen(false)} to="/app/dekoracie" className="text-white text-xl font-semibold drop-shadow">Dekorácie</Link>
+            <Link onClick={() => setOpen(false)} to="/app/figurky" className="text-white text-xl font-semibold drop-shadow">Figúrky</Link>
+            <Link onClick={() => setOpen(false)} to="/app/zvieratka" className="text-white text-xl font-semibold drop-shadow">Zvieratká</Link>
+            <Link onClick={() => setOpen(false)} to="/podmienky" className="text-white text-xl font-semibold drop-shadow">Podmienky</Link>
+            <Link onClick={() => setOpen(false)} to="/gdpr" className="text-white text-xl font-semibold drop-shadow">GDPR</Link>
+            <Link onClick={() => setOpen(false)} to="/kontakt" className="text-white text-xl font-semibold drop-shadow">Kontakt</Link>
+          </div>
         </div>
       )}
     </nav>
