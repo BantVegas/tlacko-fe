@@ -48,19 +48,18 @@ export default function Navbar() {
       {/* Mobile menu */}
       {open && (
         <div className="md:hidden fixed inset-0 z-40 flex items-center justify-center">
-          {/* Overlay podklad */}
-          <div className="absolute inset-0 bg-blue-900/90 backdrop-blur-lg"></div>
-          {/* Menu linky */}
-          <div className="relative flex flex-col items-center pt-24 space-y-8 w-full">
-            <Link onClick={() => setOpen(false)} to="/" className="text-white text-xl font-semibold drop-shadow">Domov</Link>
-            <Link onClick={() => setOpen(false)} to="/app/antistres" className="text-white text-xl font-semibold drop-shadow">Antistres</Link>
-            <Link onClick={() => setOpen(false)} to="/app/auticka" className="text-white text-xl font-semibold drop-shadow">Autíčka</Link>
-            <Link onClick={() => setOpen(false)} to="/app/dekoracie" className="text-white text-xl font-semibold drop-shadow">Dekorácie</Link>
-            <Link onClick={() => setOpen(false)} to="/app/figurky" className="text-white text-xl font-semibold drop-shadow">Figúrky</Link>
-            <Link onClick={() => setOpen(false)} to="/app/zvieratka" className="text-white text-xl font-semibold drop-shadow">Zvieratká</Link>
-            <Link onClick={() => setOpen(false)} to="/podmienky" className="text-white text-xl font-semibold drop-shadow">Podmienky</Link>
-            <Link onClick={() => setOpen(false)} to="/gdpr" className="text-white text-xl font-semibold drop-shadow">GDPR</Link>
-            <Link onClick={() => setOpen(false)} to="/kontakt" className="text-white text-xl font-semibold drop-shadow">Kontakt</Link>
+          {/* Extra tmavý overlay, prekryje aj svetlé obrázky */}
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-sm"></div>
+          <div className="relative flex flex-col items-center space-y-8">
+            <Link onClick={() => setOpen(false)} to="/" className="text-white text-2xl font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">Domov</Link>
+            <Link onClick={() => setOpen(false)} to="/app/antistres" className="text-white text-2xl font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">Antistres</Link>
+            <Link onClick={() => setOpen(false)} to="/app/auticka" className="text-white text-2xl font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">Autíčka</Link>
+            <Link onClick={() => setOpen(false)} to="/app/dekoracie" className="text-white text-2xl font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">Dekorácie</Link>
+            <Link onClick={() => setOpen(false)} to="/app/figurky" className="text-white text-2xl font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">Figúrky</Link>
+            <Link onClick={() => setOpen(false)} to="/app/zvieratka" className="text-white text-2xl font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">Zvieratká</Link>
+            <Link onClick={() => setOpen(false)} to="/podmienky" className="text-white text-2xl font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">Podmienky</Link>
+            <Link onClick={() => setOpen(false)} to="/gdpr" className="text-white text-2xl font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">GDPR</Link>
+            <Link onClick={() => setOpen(false)} to="/kontakt" className="text-white text-2xl font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">Kontakt</Link>
           </div>
         </div>
       )}

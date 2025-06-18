@@ -78,13 +78,22 @@ export default function Kontakt() {
           </form>
           <div className="mt-8 text-gray-600 text-sm">
             <div className="mb-2">
+              <span className="font-semibold">Spoločnosť:</span> Tewa s.r.o.
+            </div>
+            <div className="mb-2">
+              <span className="font-semibold">IČO:</span> 55861725
+            </div>
+            <div className="mb-2">
+              <span className="font-semibold">DIČ:</span> 2122115270
+            </div>
+            <div className="mb-2">
+              <span className="font-semibold">Adresa:</span> Lachova 1604/25, 85103 Bratislava
+            </div>
+            <div className="mb-2">
               <span className="font-semibold">E-mail:</span> info@tlacko.sk
             </div>
             <div>
               <span className="font-semibold">Telefón:</span> +421 911 000 000
-            </div>
-            <div>
-              <span className="font-semibold">Adresa:</span> Tvoja adresa 123, Mesto
             </div>
           </div>
         </div>
@@ -105,3 +114,4 @@ export default function Kontakt() {
     </div>
   );
 }
+
