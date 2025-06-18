@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="bg-white/70 backdrop-blur py-4 mt-8 shadow-inner text-center text-gray-700">
+    <footer className="bg-white/40 backdrop-blur-lg border-t border-gray-200 py-4 shadow-inner text-center text-gray-700 transition-all">
       <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
         <div>
           &copy; {new Date().getFullYear()} tlacko.sk — Vyrobené s{" "}

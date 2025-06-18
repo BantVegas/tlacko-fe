@@ -7,7 +7,8 @@ import DekoraciePage from "./app/dekoracie/page";
 import FigurkyPage from "./app/figurky/page";
 import ZvieratkaPage from "./app/zvieratka/page";
 import Gdpr from "@/components/Gdpr"; // GDPR stránka
-import Podmienky from "@/components/Podmienky"; // Podmienky používania stránka
+import Podmienky from "@/components/Podmienky";
+import Kontakt from "@/components/Kontakt";
 
 // Homepage obsah – do komponentu, aby bol v elemente route
 function HomeContent() {
@@ -103,6 +104,7 @@ export default function App() {
         <Route path="/app/zvieratka" element={<ZvieratkaPage />} />
         <Route path="/gdpr" element={<Gdpr />} /> {/* GDPR podstránka */}
         <Route path="/podmienky" element={<Podmienky />} /> {/* Podmienky používania */}
+        <Route path="/kontakt" element={<Kontakt />} />
       </Routes>
     </Layout>
   );
