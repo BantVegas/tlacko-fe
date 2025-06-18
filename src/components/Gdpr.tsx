@@ -11,19 +11,19 @@ export default function Gdpr() {
         backgroundAttachment: "fixed",
       }}
     >
-      <div className="bg-white/90 rounded-2xl shadow-xl max-w-2xl w-full px-8 py-10 mt-32 mb-8 border border-gray-200 backdrop-blur">
-        <h1 className="text-3xl font-bold text-blue-800 mb-6 text-center">
+      <div className="bg-white/90 rounded-2xl shadow-xl max-w-5xl w-full px-4 md:px-16 py-10 mt-24 mb-8 border border-gray-200 backdrop-blur">
+        <h1 className="text-3xl font-bold text-blue-800 mb-8 text-center">
           Ochrana osobných údajov (GDPR)
         </h1>
 
-        <section className="mb-6">
+        <section className="mb-8">
           <h2 className="text-xl font-semibold text-blue-700 mb-2">1. Prevádzkovateľ</h2>
           <p>
             Prevádzkovateľom webovej stránky <span className="font-semibold">tlacko.sk</span> je spoločnosť [Tvoja firma], sídlo [Adresa], IČO: [doplň], zapísaná v [doplň]. Kontakt: [e-mail], [telefón].
           </p>
         </section>
 
-        <section className="mb-6">
+        <section className="mb-8">
           <h2 className="text-xl font-semibold text-blue-700 mb-2">2. Aké údaje spracúvame</h2>
           <ul className="list-disc ml-6">
             <li>Meno a priezvisko (pri objednávke)</li>
@@ -33,7 +33,7 @@ export default function Gdpr() {
           </ul>
         </section>
 
-        <section className="mb-6">
+        <section className="mb-8">
           <h2 className="text-xl font-semibold text-blue-700 mb-2">3. Účel spracúvania</h2>
           <ul className="list-disc ml-6">
             <li>Vybavenie objednávky a poskytovanie služieb</li>
@@ -43,21 +43,21 @@ export default function Gdpr() {
           </ul>
         </section>
 
-        <section className="mb-6">
+        <section className="mb-8">
           <h2 className="text-xl font-semibold text-blue-700 mb-2">4. Právny základ</h2>
           <p>
             Spracúvanie údajov je založené na plnení zmluvy, plnení zákonných povinností, oprávnenom záujme alebo na základe súhlasu.
           </p>
         </section>
 
-        <section className="mb-6">
+        <section className="mb-8">
           <h2 className="text-xl font-semibold text-blue-700 mb-2">5. Doba uchovávania</h2>
           <p>
             Osobné údaje uchovávame len po dobu nevyhnutnú na splnenie účelu ich spracúvania alebo podľa zákonných požiadaviek.
           </p>
         </section>
 
-        <section className="mb-6">
+        <section className="mb-8">
           <h2 className="text-xl font-semibold text-blue-700 mb-2">6. Práva dotknutých osôb</h2>
           <ul className="list-disc ml-6">
             <li>právo na prístup k údajom</li>
@@ -70,7 +70,7 @@ export default function Gdpr() {
           </ul>
         </section>
 
-        <section className="mb-6">
+        <section className="mb-8">
           <h2 className="text-xl font-semibold text-blue-700 mb-2">7. Cookies</h2>
           <p>
             Stránka používa cookies na zlepšenie používateľského zážitku a na analytické účely. Podrobnosti nájdete v sekcii <span className="underline">Podmienky používania</span>.

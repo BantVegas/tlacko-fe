@@ -13,7 +13,7 @@ export default function Footer() {
           <Link to="/gdpr" className="hover:text-blue-700 underline transition">
             GDPR
           </Link>
-          <Link to="/terms" className="hover:text-blue-700 underline transition">
+          <Link to="/podmienky" className="hover:text-blue-700 underline transition">
             Podmienky používania
           </Link>
         </div>
