@@ -1,5 +1,6 @@
 import React from "react";
 import ProductCard from "@/components/ProductCard";
+import { useCart } from "@/components/CartContext"; // Pre výpis obsahu košíka (debug)
 
 const products = [
   { id: 1, name: "Antistres gulička", desc: "Na kľúčiky, do ruky, na stôl.", price: "6€", image: "/images/placeholder.png" },
@@ -13,6 +14,8 @@ const products = [
 ];
 
 export default function AntistresPage() {
+  const { state } = useCart(); // Pre zobrazenie košíka
+
   return (
     <div
       className="min-h-screen pt-32 px-6"
@@ -28,6 +31,22 @@ export default function AntistresPage() {
         {products.map(prod => (
           <ProductCard key={prod.id} product={prod} />
         ))}
+      </div>
+
+      {/* Debug zóna: vypíš obsah košíka */}
+      <div className="mt-12 bg-white/70 p-4 rounded-lg shadow max-w-xl mx-auto">
+        <h3 className="font-bold text-blue-900 mb-2">🛒 Obsah košíka (debug):</h3>
+        {state.items.length === 0 ? (
+          <div className="text-gray-600">Košík je prázdny.</div>
+        ) : (
+          <ul className="list-disc pl-6">
+            {state.items.map(item => (
+              <li key={item.id} className="mb-1">
+                <span className="font-semibold">{item.name}</span> x {item.qty} &ndash; {item.price}€
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

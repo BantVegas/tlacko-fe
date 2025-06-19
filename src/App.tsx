@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
+import { CartProvider } from "@/components/CartContext"; 
 import AntistresPage from "./app/antistres/page";
 import AutickaPage from "./app/auticka/page";
 import DekoraciePage from "./app/dekoracie/page";
@@ -9,6 +10,9 @@ import ZvieratkaPage from "./app/zvieratka/page";
 import Gdpr from "@/components/Gdpr"; // GDPR stránka
 import Podmienky from "@/components/Podmienky";
 import Kontakt from "@/components/Kontakt";
+import CartPage from "./app/cart/page";
+
+
 
 // Homepage obsah – do komponentu, aby bol v elemente route
 function HomeContent() {
@@ -105,6 +109,8 @@ export default function App() {
         <Route path="/gdpr" element={<Gdpr />} /> {/* GDPR podstránka */}
         <Route path="/podmienky" element={<Podmienky />} /> {/* Podmienky používania */}
         <Route path="/kontakt" element={<Kontakt />} />
+        <Route path="/cart" element={<CartPage />} />
+
       </Routes>
     </Layout>
   );
