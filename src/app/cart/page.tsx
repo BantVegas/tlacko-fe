@@ -1,96 +1,142 @@
+// src/app/cart/page.tsx
 import React from "react";
-import { useCart } from "@/components/CartContext";
 import { Link } from "react-router-dom";
+import { useCart } from "@/components/CartContext";
+
+function eur(n: number) {
+  return n.toFixed(2) + " €";
+}
 
 export default function CartPage() {
-  const { state, dispatch } = useCart();
+  const { state, totalPrice, totalQty, increment, decrement, remove, clear } = useCart();
   const items = state.items;
+  const [submitting, setSubmitting] = React.useState(false);
 
-  const handleRemove = (id: string | number) => {
-    dispatch({ type: "REMOVE", id: String(id) });
-  };
+  async function handleCheckout() {
+    if (!items.length) return;
+    setSubmitting(true);
+    try {
+      const refId = `ORD-${Date.now()}`; // tvoje interné ID objednávky
 
-  const handleIncrement = (id: string | number) => {
-    dispatch({ type: "INCREMENT", id: String(id) });
-  };
+      const res = await fetch("/api/comgate-create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          priceEur: Number(totalPrice.toFixed(2)), // v EUR
+          label: "Objednavka",
+          refId,
+          // voliteľne: email, fullName
+        }),
+      });
 
-  const handleDecrement = (id: string | number) => {
-    dispatch({ type: "DECREMENT", id: String(id) });
-  };
+      const data = await res.json();
+      if (!res.ok || !data?.ok || !data?.redirect) {
+        alert("Vytvorenie platby zlyhalo.");
+        console.error(data);
+        return;
+      }
 
-  const total = items.reduce((sum, item) => sum + item.qty * item.price, 0);
+      window.location.href = data.redirect; // presmerovanie na Comgate
+    } catch (e) {
+      console.error(e);
+      alert("Chyba pri vytváraní platby.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  const empty = items.length === 0;
 
   return (
-    <div className="max-w-3xl mx-auto min-h-[60vh] bg-white/80 rounded-2xl shadow-lg p-6 mt-16 mb-12">
-      <h1 className="text-3xl font-bold mb-6 text-blue-800">Košík</h1>
-      {items.length === 0 ? (
-        <div className="text-center text-gray-500 py-24">
-          Košík je prázdny.<br />
-          <Link
-            to="/"
-            className="text-blue-700 font-semibold underline hover:text-blue-900"
-          >
-            Pokračovať v nákupe
-          </Link>
-        </div>
-      ) : (
-        <>
-          <div className="divide-y">
-            {items.map((item) => (
-              <div key={item.id} className="flex items-center py-4 gap-4">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-16 h-16 rounded-lg object-contain bg-gray-100"
-                />
-                <div className="flex-1">
-                  <div className="font-semibold text-blue-900">{item.name}</div>
-                  <div className="text-gray-600 text-sm">{item.price.toFixed(2)} € / ks</div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    className="px-2 py-1 bg-gray-200 rounded"
-                    onClick={() => handleDecrement(item.id)}
-                    disabled={item.qty <= 1}
-                  >
-                    -
-                  </button>
-                  <span className="font-bold min-w-[2ch] text-center">{item.qty}</span>
-                  <button
-                    className="px-2 py-1 bg-gray-200 rounded"
-                    onClick={() => handleIncrement(item.id)}
-                  >
-                    +
-                  </button>
-                </div>
-                <div className="font-semibold w-16 text-right">
-                  {(item.qty * item.price).toFixed(2)} €
-                </div>
-                <button
-                  onClick={() => handleRemove(item.id)}
-                  className="ml-2 text-red-600 hover:text-red-800 text-sm"
-                  title="Odstrániť"
-                >
-                  ×
+    <div className="min-h-screen pt-28 pb-16 px-6 bg-gradient-to-b from-white to-blue-50/40">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-3xl font-bold text-blue-800 mb-6">Košík</h1>
+
+        {empty ? (
+          <div className="bg-white rounded-xl shadow p-6">
+            <p>Košík je prázdny.</p>
+            <Link to="/" className="inline-block mt-4 px-5 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700">
+              Pokračovať v nákupe
+            </Link>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Položky */}
+            <div className="md:col-span-2 bg-white rounded-xl shadow p-4">
+              <ul className="divide-y">
+                {items.map((it) => (
+                  <li key={it.id} className="py-4 flex gap-4 items-center">
+                    <img src={it.image} alt={it.name} className="w-20 h-20 object-cover rounded-lg border" />
+                    <div className="flex-1">
+                      <div className="font-semibold">{it.name}</div>
+                      <div className="text-sm text-gray-500">{eur(it.price)}</div>
+
+                      <div className="mt-2 flex items-center gap-2">
+                        <button
+                          onClick={() => decrement(it.id)}
+                          className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
+                          aria-label="Znížiť množstvo"
+                        >
+                          −
+                        </button>
+                        <span className="w-10 text-center">{it.qty}</span>
+                        <button
+                          onClick={() => increment(it.id)}
+                          className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
+                          aria-label="Zvýšiť množstvo"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <div className="font-semibold">{eur(it.price * it.qty)}</div>
+                      <button onClick={() => remove(it.id)} className="text-red-600 hover:underline text-sm mt-1">
+                        Odstrániť
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-4">
+                <button onClick={clear} className="text-gray-600 hover:underline text-sm">
+                  Vyprázdniť košík
                 </button>
               </div>
-            ))}
+            </div>
+
+            {/* Súhrn */}
+            <aside className="bg-white rounded-xl shadow p-5 h-fit">
+              <div className="flex justify-between">
+                <span>Položky</span>
+                <span>{totalQty}</span>
+              </div>
+              <div className="flex justify-between mt-1">
+                <span>Medzisúčet</span>
+                <span>{eur(totalPrice)}</span>
+              </div>
+              <div className="text-sm text-gray-500 mt-2">Doručenie: 2–4 dni (Slovensko)</div>
+
+              <Link
+                to="/"
+                className="mt-4 inline-block w-full text-center px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200"
+              >
+                Pokračovať v nákupe
+              </Link>
+
+              <button
+                onClick={handleCheckout}
+                disabled={submitting}
+                className="mt-3 w-full px-5 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+              >
+                {submitting ? "Prebieha..." : "Zaplať Comgate"}
+              </button>
+            </aside>
           </div>
-          {/* Súčet */}
-          <div className="flex justify-end mt-6 text-xl font-bold text-blue-800">
-            Celkom: {total.toFixed(2)} €
-          </div>
-          {/* Pokračovať na platbu */}
-          <div className="flex justify-end mt-8">
-            <button
-              className="bg-blue-700 text-white px-6 py-3 rounded-lg font-bold text-lg shadow hover:bg-blue-900 transition"
-              // onClick={handleCheckout} // Napojíš Stripe neskôr
-            >
-              Pokračovať na platbu
-            </button>
-          </div>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 }

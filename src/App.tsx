@@ -1,18 +1,24 @@
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
-import { CartProvider } from "@/components/CartContext"; 
+import { CartProvider } from "@/components/CartContext";
+
 import AntistresPage from "./app/antistres/page";
 import AutickaPage from "./app/auticka/page";
 import DekoraciePage from "./app/dekoracie/page";
 import FigurkyPage from "./app/figurky/page";
 import ZvieratkaPage from "./app/zvieratka/page";
-import Gdpr from "@/components/Gdpr"; // GDPR stránka
+import FroggyFunPage from "./app/zvieratka/froggy-fun/page";
+
+import Gdpr from "@/components/Gdpr";
 import Podmienky from "@/components/Podmienky";
 import Kontakt from "@/components/Kontakt";
 import CartPage from "./app/cart/page";
 
-
+// ⬇️ Checkout stránky (uisti sa, že existujú tieto súbory)
+import Success from "./app/checkout/Success";
+import Cancel from "./app/checkout/Cancel";
+import Pending from "./app/checkout/Pending";
 
 // Homepage obsah – do komponentu, aby bol v elemente route
 function HomeContent() {
@@ -58,9 +64,7 @@ function HomeContent() {
               key={idx}
               to={item.path}
               className="backdrop-blur-xl bg-white/50 border border-white/30 rounded-2xl shadow-xl p-6 flex flex-col items-center min-h-[230px] transition hover:scale-105 hover:bg-white/70 cursor-pointer no-underline"
-              style={{
-                boxShadow: "0 8px 32px 0 rgba(31,38,135,0.17)",
-              }}
+              style={{ boxShadow: "0 8px 32px 0 rgba(31,38,135,0.17)" }}
             >
               <div className="text-4xl mb-2">{item.icon}</div>
               <h3 className="text-xl font-bold text-blue-800 mb-1">{item.title}</h3>
@@ -78,9 +82,7 @@ function HomeContent() {
               key={idx}
               to={item.path}
               className="backdrop-blur-xl bg-white/50 border border-white/30 rounded-2xl shadow-xl p-6 flex flex-col items-center min-h-[230px] transition hover:scale-105 hover:bg-white/70 cursor-pointer no-underline"
-              style={{
-                boxShadow: "0 8px 32px 0 rgba(31,38,135,0.17)",
-              }}
+              style={{ boxShadow: "0 8px 32px 0 rgba(31,38,135,0.17)" }}
             >
               <div className="text-4xl mb-2">{item.icon}</div>
               <h3 className="text-xl font-bold text-blue-800 mb-1">{item.title}</h3>
@@ -98,20 +100,34 @@ function HomeContent() {
 // Kompletný App.tsx
 export default function App() {
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<HomeContent />} />
-        <Route path="/app/antistres" element={<AntistresPage />} />
-        <Route path="/app/auticka" element={<AutickaPage />} />
-        <Route path="/app/dekoracie" element={<DekoraciePage />} />
-        <Route path="/app/figurky" element={<FigurkyPage />} />
-        <Route path="/app/zvieratka" element={<ZvieratkaPage />} />
-        <Route path="/gdpr" element={<Gdpr />} /> {/* GDPR podstránka */}
-        <Route path="/podmienky" element={<Podmienky />} /> {/* Podmienky používania */}
-        <Route path="/kontakt" element={<Kontakt />} />
-        <Route path="/cart" element={<CartPage />} />
+    <CartProvider>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomeContent />} />
 
-      </Routes>
-    </Layout>
+          {/* Kategórie */}
+          <Route path="/app/antistres" element={<AntistresPage />} />
+          <Route path="/app/auticka" element={<AutickaPage />} />
+          <Route path="/app/dekoracie" element={<DekoraciePage />} />
+          <Route path="/app/figurky" element={<FigurkyPage />} />
+          <Route path="/app/zvieratka" element={<ZvieratkaPage />} />
+          <Route path="/app/zvieratka/froggy-fun" element={<FroggyFunPage />} />
+
+          {/* Statické stránky */}
+          <Route path="/gdpr" element={<Gdpr />} />
+          <Route path="/podmienky" element={<Podmienky />} />
+          <Route path="/kontakt" element={<Kontakt />} />
+
+          {/* Košík */}
+          <Route path="/cart" element={<CartPage />} />
+
+          {/* Checkout výsledky */}
+          <Route path="/checkout/success" element={<Success />} />
+          <Route path="/checkout/cancel" element={<Cancel />} />
+          <Route path="/checkout/pending" element={<Pending />} />
+        </Routes>
+      </Layout>
+    </CartProvider>
   );
 }
+
