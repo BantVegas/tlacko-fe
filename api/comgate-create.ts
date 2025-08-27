@@ -1,17 +1,22 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method not allowed" });
+export default async function handler(req: any, res: any) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
+  }
 
   try {
     const { priceEur, label, refId, email, fullName } = req.body || {};
-    if (!priceEur || !label || !refId) {
+    if (priceEur == null || !label || !refId) {
       return res.status(400).json({ ok: false, error: "Missing priceEur|label|refId" });
+    }
+
+    // bezpečnostná brzda – ak by bola suma menšia ako 1 EUR, rovno stopneme
+    if (Number(priceEur) < 1) {
+      return res.status(400).json({ ok: false, error: "Minimálna suma pre platbu je 1.00 €" });
     }
 
     const merchant = process.env.COMGATE_MERCHANT!;
     const secret   = process.env.COMGATE_SECRET!;
-    const baseUrl  = process.env.PUBLIC_BASE_URL || "http://localhost:5174";
+    const baseUrl  = process.env.PUBLIC_BASE_URL || "https://example.com";
 
     const payload = {
       test: String(process.env.COMGATE_TEST) === "true",
@@ -39,14 +44,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body: JSON.stringify(payload),
     });
 
-    const data = await resp.json();
+    const data = await resp.json().catch(() => ({}));
+
     if (!resp.ok || data.code !== 0) {
-      return res.status(400).json({ ok: false, error: data });
+      return res.status(400).json({
+        ok: false,
+        error: data?.message || "Comgate odmietol požiadavku",
+        code: data?.code ?? resp.status,
+        details: data,
+      });
     }
 
-    // { code:0, message:"OK", transId:"...", redirect:"..." }
-    return res.status(200).json({ ok: true, ...data });
+    return res.status(200).json({ ok: true, ...data }); // { transId, redirect, ... }
   } catch (e: any) {
     return res.status(500).json({ ok: false, error: e?.message || "Server error" });
   }
 }
+

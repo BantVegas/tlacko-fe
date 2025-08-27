@@ -5,7 +5,7 @@ import { useCart } from "@/components/CartContext";
 const PRODUCT = {
   id: "froggy-fun",
   name: "Froggy Fun Buddy",
-  price: 0.50, // číslo v EUR
+  price: 1, // číslo v EUR
   image: "/images/froggy_fun.jpg",
 };
 
