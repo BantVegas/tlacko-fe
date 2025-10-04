@@ -1,112 +1,90 @@
-import React from "react";
-import { useCart } from "@/components/CartContext"; // uprav cestu ak máš inú
+import React, { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
-// ===== Typy =====
-export type Product = {
+type SimpleProduct = {
   id: number | string;
   name: string;
   desc?: string;
-  /** Môže byť "12€", "12,90", 12.9 atď. */
-  price?: string | number;
-  image: string;
+  price?: string;   // v boxe neukazujeme
+  image: string;    // povinná (absolútna z /public, napr. "/images/figúrka-1.jpg")
+  image2?: string;  // voliteľné pre detail
+  image3?: string;  // voliteľné pre detail
 };
 
-type ProductCardProps = {
-  product: Product;
-  /** Zobraziť cenu? default: true */
-  showPrice?: boolean;
-  /** Zobraziť tlačidlo „Kúpiť“? default: true */
-  showBuy?: boolean;
-  /** Voliteľná akcia namiesto defaultného pridania do košíka */
-  onBuy?: () => void;
-  className?: string;
-};
+type Props = { product: SimpleProduct };
 
-// ===== Pomocné funkcie =====
-function parsePriceToNumber(price?: string | number): number {
-  if (price == null) return 0;
-  if (typeof price === "number" && !Number.isNaN(price)) return price;
-  // "11 €" -> "11", "12,90" -> "12.90"
-  const cleaned = String(price).replace(/[€\s]/g, "").replace(",", ".");
-  const n = Number.parseFloat(cleaned);
-  return Number.isFinite(n) ? n : 0;
-}
+const slugify = (s: string) =>
+  s
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
-function formatEur(n: number): string {
-  return n.toFixed(2) + " €";
-}
+export default function ProductCard({ product }: Props) {
+  const slug = useMemo(() => slugify(product.name), [product.name]);
 
-// ===== Komponent =====
-const ProductCard: React.FC<ProductCardProps> = ({
-  product,
-  showPrice = true,
-  showBuy = true,
-  onBuy,
-  className = "",
-}) => {
-  const { dispatch } = useCart();
+  // Bezpečne enkódujeme URL (diakritika -> percent-encoding)
+  const encode = (p?: string) => (p ? encodeURI(p) : undefined);
 
-  const numericPrice = parsePriceToNumber(product.price);
+  // Kandidáti zdroja (pre istotu vieme prepnúť aj na variant bez diakritiky)
+  const primaryRaw = product.image || "/images/placeholder.png";
+  const candidates = useMemo(() => {
+    const arr = new Set<string>();
+    const enc = encode(primaryRaw)!;
+    arr.add(enc);
+    // fallback bez diakritiky (figúrka -> figurka)
+    arr.add(enc.replace("%C3%BArka", "gurka").replace("figúrka", "figurka"));
+    // fallback na .png / .webp, keby boli exporty iné
+    arr.add(enc.replace(/\.jpg$/i, ".png"));
+    arr.add(enc.replace(/\.jpg$/i, ".webp"));
+    return Array.from(arr);
+  }, [primaryRaw]);
 
-  const handleAddToCart = () => {
-    // fallback – ak príde undefined cena, vložíme 0
-    dispatch({
-      type: "ADD",
-      item: {
-        id: String(product.id), // v košíku držíme string ID
-        name: product.name,
-        price: numericPrice,
-        image: product.image,
-        qty: 1,
-      },
-    });
-  };
+  const [idx, setIdx] = useState(0);
+  const currentSrc = candidates[Math.min(idx, candidates.length - 1)];
 
-  const handleBuyClick = () => {
-    if (onBuy) return onBuy();
-    handleAddToCart();
+  // Payload do detailu – tiež enkóduj obrázky
+  const payload = {
+    slug,
+    title: product.name,
+    description: product.desc ?? "",
+    price: product.price ?? "",
+    images: [product.image, product.image2, product.image3]
+      .filter(Boolean)
+      .map((p) => encode(p as string)) as string[],
   };
 
   return (
-    <div
-      className={
-        "bg-white/90 rounded-2xl shadow-md p-4 flex flex-col items-center transition hover:scale-105 hover:shadow-lg min-w-[220px] " +
-        className
-      }
-    >
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-32 h-32 object-contain mb-3 rounded-xl bg-gray-100"
-        loading="lazy"
-      />
-
-      <h3 className="font-bold text-lg text-blue-800 mb-1">{product.name}</h3>
-
-      {product.desc && (
-        <p className="text-gray-600 text-center mb-2">{product.desc}</p>
-      )}
-
-      {showPrice && (
-        <div className="font-semibold text-blue-600 text-xl mb-3">
-          {product.price !== undefined
-            ? typeof product.price === "number"
-              ? formatEur(product.price)
-              : product.price
-            : formatEur(numericPrice)}
+    <div className="rounded-2xl backdrop-blur-xl bg-white/65 border border-white/30 shadow-xl p-5 flex flex-col">
+      <Link to={`/app/figurky/${slug}`} state={{ product: payload }} className="block">
+        <div className="aspect-square w-full overflow-hidden rounded-xl bg-gray-100">
+          <img
+            src={currentSrc}
+            alt={product.name}
+            className="h-full w-full object-cover"
+            loading="lazy"
+            onError={() => {
+              // preskoč na ďalšieho kandidáta; ak už niet, nechaj posledný (zobrazí sa prázdne pole)
+              setIdx((i) => (i + 1 < candidates.length ? i + 1 : i));
+            }}
+          />
         </div>
-      )}
+      </Link>
 
-      {showBuy && (
-        <button
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-800 transition w-full"
-          onClick={handleBuyClick}
+      <Link to={`/app/figurky/${slug}`} state={{ product: payload }} className="mt-4 block text-center">
+        <h3 className="text-lg font-bold text-blue-800">{product.name}</h3>
+      </Link>
+
+      <div className="mt-4">
+        <Link
+          to={`/app/figurky/${slug}`}
+          state={{ product: payload }}
+          className="w-full inline-flex items-center justify-center px-5 py-2 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
         >
-          Kúpiť
-        </button>
-      )}
+          Zobraziť
+        </Link>
+      </div>
     </div>
   );
-};
-
-export default ProductCard;
+}

@@ -15,14 +15,19 @@ import Podmienky from "@/components/Podmienky";
 import Kontakt from "@/components/Kontakt";
 import CartPage from "./app/cart/page";
 
-// ⬇️ Checkout stránky (uisti sa, že existujú tieto súbory)
+// ⬇️ Checkout stránky
 import Success from "./app/checkout/Success";
 import Cancel from "./app/checkout/Cancel";
 import Pending from "./app/checkout/Pending";
 
-// Homepage obsah – do komponentu, aby bol v elemente route
+// ⬇️ NOVÉ: Blog a O nás
+import Blog from "@/components/blog";
+import Onas from "@/components/onas";
+
+// ⬇️ NOVÉ: Detail produktu (figúrky)
+import ProductDetail from "./app/figurky/ProductDetail"; // <- pridané
+
 function HomeContent() {
-  // Rozdelené položky
   const firstRow = [
     { title: "Zvieratko", desc: "Roztomilé 3D hračky pre najmenších.", icon: "🦊", path: "/app/zvieratka" },
     { title: "Antistres", desc: "Pomôcky na odbúranie stresu.", icon: "🧘", path: "/app/antistres" },
@@ -43,20 +48,12 @@ function HomeContent() {
         backgroundAttachment: "fixed",
       }}
     >
-      {/* Overlay pre stmavenie celej stránky */}
       <div className="absolute inset-0 bg-black/70 -z-10" />
-
-      {/* Hero sekcia */}
       <section className="pt-32 pb-16 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold text-white drop-shadow-lg mb-4">
-          3D tlačené hračky na mieru
-        </h1>
-        <p className="text-2xl md:text-3xl text-white drop-shadow mb-2">
-          Objavte svet 3D tlače a unikátne hračky pre každého!
-        </p>
+        <h1 className="text-5xl md:text-7xl font-bold text-white drop-shadow-lg mb-4">3D tlačené hračky</h1>
+        <p className="text-2xl md:text-3xl text-white drop-shadow mb-2">Objavte svet 3D tlače a unikátne hračky pre každého!</p>
       </section>
 
-      {/* 3 okienka v prvom rade */}
       <section className="relative z-10 py-8 px-2 md:px-0">
         <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {firstRow.map((item, idx) => (
@@ -74,7 +71,6 @@ function HomeContent() {
         </div>
       </section>
 
-      {/* 2 okienka v druhom rade */}
       <section className="relative z-10 py-4 px-2 md:px-0">
         <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8">
           {secondRow.map((item, idx) => (
@@ -97,7 +93,6 @@ function HomeContent() {
   );
 }
 
-// Kompletný App.tsx
 export default function App() {
   return (
     <CartProvider>
@@ -110,6 +105,8 @@ export default function App() {
           <Route path="/app/auticka" element={<AutickaPage />} />
           <Route path="/app/dekoracie" element={<DekoraciePage />} />
           <Route path="/app/figurky" element={<FigurkyPage />} />
+          {/* DETAIL PRODUKTU (figúrky) */}
+          <Route path="/app/figurky/:slug" element={<ProductDetail />} />
           <Route path="/app/zvieratka" element={<ZvieratkaPage />} />
           <Route path="/app/zvieratka/froggy-fun" element={<FroggyFunPage />} />
 
@@ -117,6 +114,10 @@ export default function App() {
           <Route path="/gdpr" element={<Gdpr />} />
           <Route path="/podmienky" element={<Podmienky />} />
           <Route path="/kontakt" element={<Kontakt />} />
+
+          {/* Blog & O nás */}
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/onas" element={<Onas />} />
 
           {/* Košík */}
           <Route path="/cart" element={<CartPage />} />
@@ -130,4 +131,5 @@ export default function App() {
     </CartProvider>
   );
 }
+
 
