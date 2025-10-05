@@ -5,20 +5,20 @@ import TekvickovaFigurka from "@/boxes/box-tekvickova-figurka";
 
 export default function FigurkyPage() {
   const products = [TekvickovaFigurka];
-  const heroUrl = fbUrl("/images/hero.png");
+  const heroPng = fbUrl("/images/hero.png");
+  const heroJpg = fbUrl("/images/hero.jpg"); // fallback, ak by PNG neexistoval
 
   return (
     <main
-      className="min-h-screen relative"
+      className="min-h-screen"
       style={{
-        backgroundImage: `url('${heroUrl}')`,
+        // Gradient (stmavenie) + hero PNG + hero JPG fallback.
+        backgroundImage: `linear-gradient(rgba(0,0,0,.65), rgba(0,0,0,.65)), url('${heroPng}'), url('${heroJpg}')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: "fixed",
+        backgroundAttachment: "fixed", // ak by robilo problémy, pokojne zmaž
       }}
     >
-      <div className="absolute inset-0 bg-black/65 -z-10" />
-
       <section className="container mx-auto px-4 pt-28 pb-12">
         <h1 className="text-4xl font-extrabold text-white drop-shadow mb-8">
           Figúrky
