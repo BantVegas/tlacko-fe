@@ -1,37 +1,35 @@
-// src/app/zvieratka/page.tsx
 import React from "react";
-import ProductCard from "@/components/ProductCard"; // skontroluj, že táto cesta naozaj smeruje na súbor s tvojou novou verziou
+import ProductCard from "@/components/ProductCard";
+import { fbUrl } from "@/lib/img";
 
-type SimpleProduct = {
-  id: number | string;
-  name: string;
-  desc?: string;
-  price?: string;
-  image: string;
-  image2?: string;
-  image3?: string;
-};
-
-const PRODUCTS: SimpleProduct[] = [
-  { id: 1, name: "Zajačik", desc: "Roztomilý zajačik", price: "€9.90", image: "/images/figurka-1.jpg" },
-  { id: 2, name: "Líška", desc: "Malá líštička",   price: "€11.90", image: "/images/figurka-2.jpg" },
-  { id: 3, name: "Macko",  desc: "Macko do poličky", price: "€12.90", image: "/images/figurka-3.jpg" },
+const PRODUCTS = [
+  { id: 1, name: "Líška", image: "/images/figurka-1.jpg" },
+  { id: 2, name: "Zajačik", image: "/images/figurka-2.jpg" },
+  // doplň reálne zvieratká
 ];
 
 export default function ZvieratkaPage() {
-  return (
-    <main className="container mx-auto px-4 py-10">
-      <header className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-blue-800">Zvieratká</h1>
-        <p className="text-gray-600 mt-2">
-          Roztomilé 3D tlačené zvieratká. Vyber si svojho parťáka! 🐾
-        </p>
-      </header>
+  const heroUrl = fbUrl("/images/hero.png");
 
-      <section>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+  return (
+    <main
+      className="min-h-screen relative"
+      style={{
+        backgroundImage: `url('${heroUrl}')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      <div className="absolute inset-0 bg-black/65 -z-10" />
+
+      <section className="container mx-auto px-4 pt-28 pb-12">
+        <h1 className="text-4xl font-extrabold text-white drop-shadow mb-8">
+          Zvieratká
+        </h1>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {PRODUCTS.map((p) => (
-            // voláme len s povinným propom `product` (showPrice/showBuy majú defaulty v komponente)
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
