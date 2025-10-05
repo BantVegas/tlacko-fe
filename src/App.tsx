@@ -20,12 +20,12 @@ import Success from "./app/checkout/Success";
 import Cancel from "./app/checkout/Cancel";
 import Pending from "./app/checkout/Pending";
 
-// ⬇️ NOVÉ: Blog a O nás
+// ⬇️ Blog a O nás
 import Blog from "@/components/blog";
 import Onas from "@/components/onas";
 
-// ⬇️ NOVÉ: Detail produktu (figúrky)
-import ProductDetail from "./app/figurky/ProductDetail"; // <- pridané
+// ⬇️ Detail produktu (figúrky)
+import ProductDetail from "./app/figurky/ProductDetail";
 
 function HomeContent() {
   const firstRow = [
@@ -50,8 +50,12 @@ function HomeContent() {
     >
       <div className="absolute inset-0 bg-black/70 -z-10" />
       <section className="pt-32 pb-16 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold text-white drop-shadow-lg mb-4">3D tlačené hračky</h1>
-        <p className="text-2xl md:text-3xl text-white drop-shadow mb-2">Objavte svet 3D tlače a unikátne hračky pre každého!</p>
+        <h1 className="text-5xl md:text-7xl font-bold text-white drop-shadow-lg mb-4">
+          3D tlačené hračky
+        </h1>
+        <p className="text-2xl md:text-3xl text-white drop-shadow mb-2">
+          Objavte svet 3D tlače a unikátne hračky pre každého!
+        </p>
       </section>
 
       <section className="relative z-10 py-8 px-2 md:px-0">
@@ -88,7 +92,7 @@ function HomeContent() {
         </div>
       </section>
 
-      <div className="flex-grow"></div>
+      <div className="flex-grow" />
     </div>
   );
 }
@@ -105,6 +109,7 @@ export default function App() {
           <Route path="/app/auticka" element={<AutickaPage />} />
           <Route path="/app/dekoracie" element={<DekoraciePage />} />
           <Route path="/app/figurky" element={<FigurkyPage />} />
+
           {/* DETAIL PRODUKTU (figúrky) */}
           <Route path="/app/figurky/:slug" element={<ProductDetail />} />
           <Route path="/app/zvieratka" element={<ZvieratkaPage />} />
@@ -131,5 +136,6 @@ export default function App() {
     </CartProvider>
   );
 }
+
 
 
