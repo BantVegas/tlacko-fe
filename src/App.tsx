@@ -27,6 +27,21 @@ import Onas from "@/components/onas";
 // ⬇️ Detail produktu (figúrky)
 import ProductDetail from "./app/figurky/ProductDetail";
 
+/* ---------- Firebase image helper (rovnaký princíp ako v ProductCard) ---------- */
+const ENV_BASE = import.meta.env.VITE_IMG_BASE ?? "";
+const DEFAULT_BASE =
+  "https://firebasestorage.googleapis.com/v0/b/tlacko-fe.firebasestorage.app/o";
+const BASE_IMG = ENV_BASE || DEFAULT_BASE;
+
+/** Bezpečne spraví public Firebase URL z relatívnej cesty (napr. "/images/hero.png") */
+function fbUrl(p?: string): string {
+  if (!p) return "";
+  if (/^https?:\/\//i.test(p)) return p;         // už absolútna URL
+  const path = p.replace(/^\//, "");              // zahoď leading slash
+  return `${BASE_IMG}/${encodeURIComponent(path)}?alt=media`;
+}
+/* ------------------------------------------------------------------------------- */
+
 function HomeContent() {
   const firstRow = [
     { title: "Zvieratko", desc: "Roztomilé 3D hračky pre najmenších.", icon: "🦊", path: "/app/zvieratka" },
@@ -38,11 +53,14 @@ function HomeContent() {
     { title: "Figúrky", desc: "Hrdinovia do zbierky aj na hranie.", icon: "🦸", path: "/app/figurky" },
   ];
 
+  // Hero pozadie – už z Firebase Storage
+  const heroUrl = fbUrl("/images/hero.png");
+
   return (
     <div
       className="min-h-screen flex flex-col relative"
       style={{
-        backgroundImage: "url('/images/hero.png')",
+        backgroundImage: `url('${heroUrl}')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
@@ -136,6 +154,7 @@ export default function App() {
     </CartProvider>
   );
 }
+
 
 
 
