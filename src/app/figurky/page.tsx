@@ -1,34 +1,39 @@
 import React from "react";
 import ProductCard from "@/components/ProductCard";
-
-const products = [
-  { id: 1, name: "Superhrdina", desc: "3D figúrka superhrdinu.", price: "15€", image: "/images/placeholder.png" },
-  { id: 2, name: "Rytier", desc: "Historická figúrka rytiera.", price: "14€", image: "/images/placeholder.png" },
-  { id: 3, name: "Princezná", desc: "Krásna figúrka princeznej.", price: "13€", image: "/images/placeholder.png" },
-  { id: 4, name: "Dinosaurus", desc: "Figúrka dinosaura.", price: "12€", image: "/images/placeholder.png" },
-  { id: 5, name: "Robot", desc: "Robot na hranie i zbierku.", price: "17€", image: "/images/placeholder.png" },
-  { id: 6, name: "Pirát", desc: "Dobrodružný pirát.", price: "13€", image: "/images/placeholder.png" },
-  { id: 7, name: "Vlkodlak", desc: "Fantasy figúrka vlkodlaka.", price: "16€", image: "/images/placeholder.png" },
-  { id: 8, name: "Víla", desc: "3D figúrka víly.", price: "12€", image: "/images/placeholder.png" },
-];
+import { fbUrl } from "@/lib/img";
+import TekvickovaFigurka from "@/boxes/box-tekvickova-figurka";
 
 export default function FigurkyPage() {
+  const products = [TekvickovaFigurka];
+  const heroPng = fbUrl("/images/hero.png");
+  const heroJpg = fbUrl("/images/hero.jpg"); // fallback, ak by PNG neexistoval
+
   return (
-    <div
-      className="min-h-screen pt-32 px-6"
+    <main
+      className="min-h-screen"
       style={{
-        backgroundImage: "url('/images/hero.png')",
+        // Gradient (stmavenie) + hero PNG + hero JPG fallback.
+        backgroundImage: `linear-gradient(rgba(0,0,0,.65), rgba(0,0,0,.65)), url('${heroPng}'), url('${heroJpg}')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: "fixed",
+        backgroundAttachment: "fixed", // ak by robilo problémy, pokojne zmaž
       }}
     >
-      <h1 className="text-3xl font-bold text-blue-800 mb-8 drop-shadow-lg">Figúrky</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-        {products.map(prod => (
-          <ProductCard key={prod.id} product={prod} />
-        ))}
-      </div>
-    </div>
+      <section className="container mx-auto px-4 pt-28 pb-12">
+        <h1 className="text-4xl font-extrabold text-white drop-shadow mb-8">
+          Figúrky
+        </h1>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {products.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }
+
+
+
+

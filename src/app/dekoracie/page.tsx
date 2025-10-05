@@ -1,34 +1,41 @@
 import React from "react";
 import ProductCard from "@/components/ProductCard";
+import { fbUrl } from "@/lib/img";
 
-const products = [
-  { id: 1, name: "Jednorožec", desc: "Farebná dekorácia na stenu.", price: "14€", image: "/images/placeholder.png" },
-  { id: 2, name: "Srdce", desc: "3D srdiečko do izby.", price: "10€", image: "/images/placeholder.png" },
-  { id: 3, name: "Kvietok", desc: "Kvetinová dekorácia.", price: "11€", image: "/images/placeholder.png" },
-  { id: 4, name: "Hviezda", desc: "Svietiaca hviezdička.", price: "13€", image: "/images/placeholder.png" },
-  { id: 5, name: "Motýľ", desc: "3D motýľ na poličku.", price: "12€", image: "/images/placeholder.png" },
-  { id: 6, name: "Sloník", desc: "Roztomilý slon na poličku.", price: "15€", image: "/images/placeholder.png" },
-  { id: 7, name: "Mesiac", desc: "Dekoračný mesiac.", price: "11€", image: "/images/placeholder.png" },
-  { id: 8, name: "Slnečnica", desc: "Slnečnica z 3D tlače.", price: "13€", image: "/images/placeholder.png" },
+const PRODUCTS = [
+  { id: 1, name: "Spooky Buddy Skeleton", image: "/images/figurka-174.jpg" },
+  // doplň ďalšie dekorácie...
 ];
 
 export default function DekoraciePage() {
+  const heroUrl = fbUrl("/images/hero.png");
+
   return (
-    <div
-      className="min-h-screen pt-32 px-6"
+    <main
+      className="min-h-screen relative"
       style={{
-        backgroundImage: "url('/images/hero.png')",
+        backgroundImage: `url('${heroUrl}')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
       }}
     >
-      <h1 className="text-3xl font-bold text-blue-800 mb-8 drop-shadow-lg">Dekorácie</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-        {products.map(prod => (
-          <ProductCard key={prod.id} product={prod} />
-        ))}
-      </div>
-    </div>
+      <div className="absolute inset-0 bg-black/65 -z-10" />
+
+      <section className="container mx-auto px-4 pt-28 pb-12">
+        <h1 className="text-4xl font-extrabold text-white drop-shadow mb-8">
+          Dekorácie
+        </h1>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {PRODUCTS.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }
+
+
+

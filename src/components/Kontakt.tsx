@@ -93,7 +93,7 @@ export default function Kontakt() {
               <span className="font-semibold">E-mail:</span> info@tlacko.sk
             </div>
             <div>
-              <span className="font-semibold">Telefón:</span> +421 911 000 000
+              <span className="font-semibold">Telefón:</span> +421 917 395 789
             </div>
           </div>
         </div>
