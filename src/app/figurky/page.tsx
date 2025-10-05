@@ -1,21 +1,16 @@
-// src/app/figurky/page.tsx
 import React from "react";
 import ProductCard from "@/components/ProductCard";
-
-// ⬇️ import súboru s diakritikou v ceste
-import TekvickovaFigurka from "@/boxes/box-tekvičková-figúrka";
+import { fbUrl } from "@/lib/img";
+import TekvickovaFigurka from "@/boxes/box-tekvickova-figurka";
 
 export default function FigurkyPage() {
-  const products = [
-    TekvickovaFigurka,
-    // ...pridáš ďalšie boxy rovnakým spôsobom
-  ];
+  const products = [TekvickovaFigurka];
 
   return (
     <div
       className="min-h-screen pt-32 px-6"
       style={{
-        backgroundImage: "url('/images/hero.png')",
+        backgroundImage: `url('${fbUrl("/images/hero.png")}')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
@@ -30,4 +25,5 @@ export default function FigurkyPage() {
     </div>
   );
 }
+
 
