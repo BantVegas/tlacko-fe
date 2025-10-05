@@ -6,13 +6,14 @@ type SimpleProduct = {
   name: string;
   desc?: string;
   price?: string;   // v boxe neukazujeme
-  image: string;    // povinná (absolútna z /public, napr. "/images/figúrka-1.jpg")
+  image: string;    // očakávame cestu typu "/images/figurka-1.jpg" (alebo absolútnu URL)
   image2?: string;  // voliteľné pre detail
   image3?: string;  // voliteľné pre detail
 };
 
 type Props = { product: SimpleProduct };
 
+/** Slug do URL (bez diakritiky) */
 const slugify = (s: string) =>
   s
     .normalize("NFKD")
@@ -21,30 +22,44 @@ const slugify = (s: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
+/** 
+ * Prevedie lokálnu cestu ("/images/xxx.jpg") na public Firebase URL.
+ * Ak už je to absolútna URL (http/https), vráti ju bez zmeny.
+ * Očakáva env VITE_IMG_BASE, napr:
+ *   https://firebasestorage.googleapis.com/v0/b/tlacko-fe.firebasestorage.app/o
+ */
+const FB_BASE = import.meta.env.VITE_IMG_BASE ?? "";
+function fbUrl(p?: string): string {
+  if (!p) return "";
+  if (/^https?:\/\//i.test(p)) return p; // už absolútna URL
+  const path = p.replace(/^\//, "");      // zahoď leading slash
+  return `${FB_BASE}/${encodeURIComponent(path)}?alt=media`;
+}
+
 export default function ProductCard({ product }: Props) {
   const slug = useMemo(() => slugify(product.name), [product.name]);
 
-  // Bezpečne enkódujeme URL (diakritika -> percent-encoding)
-  const encode = (p?: string) => (p ? encodeURI(p) : undefined);
-
-  // Kandidáti zdroja (pre istotu vieme prepnúť aj na variant bez diakritiky)
+  // Kandidáti zdroja (originál + alternatívne prípony; Firebase berie presný súbor)
   const primaryRaw = product.image || "/images/placeholder.png";
+
   const candidates = useMemo(() => {
-    const arr = new Set<string>();
-    const enc = encode(primaryRaw)!;
-    arr.add(enc);
-    // fallback bez diakritiky (figúrka -> figurka)
-    arr.add(enc.replace("%C3%BArka", "gurka").replace("figúrka", "figurka"));
-    // fallback na .png / .webp, keby boli exporty iné
-    arr.add(enc.replace(/\.jpg$/i, ".png"));
-    arr.add(enc.replace(/\.jpg$/i, ".webp"));
-    return Array.from(arr);
+    const set = new Set<string>();
+    const original = fbUrl(primaryRaw);
+    set.add(original);
+
+    // voliteľné fallbacky na iné prípony (ak by exporty mali inú koncovku)
+    const altPng  = primaryRaw.replace(/\.jpe?g$/i, ".png");
+    const altWebp = primaryRaw.replace(/\.jpe?g$/i, ".webp");
+    if (altPng !== primaryRaw) set.add(fbUrl(altPng));
+    if (altWebp !== primaryRaw) set.add(fbUrl(altWebp));
+
+    return Array.from(set);
   }, [primaryRaw]);
 
   const [idx, setIdx] = useState(0);
-  const currentSrc = candidates[Math.min(idx, candidates.length - 1)];
+  const currentSrc = candidates[Math.min(idx, candidates.length - 1)] || fbUrl("/images/placeholder.png");
 
-  // Payload do detailu – tiež enkóduj obrázky
+  // Payload do detailu – obrázky rovno cez fbUrl
   const payload = {
     slug,
     title: product.name,
@@ -52,7 +67,7 @@ export default function ProductCard({ product }: Props) {
     price: product.price ?? "",
     images: [product.image, product.image2, product.image3]
       .filter(Boolean)
-      .map((p) => encode(p as string)) as string[],
+      .map((p) => fbUrl(p as string)) as string[],
   };
 
   return (
@@ -65,7 +80,7 @@ export default function ProductCard({ product }: Props) {
             className="h-full w-full object-cover"
             loading="lazy"
             onError={() => {
-              // preskoč na ďalšieho kandidáta; ak už niet, nechaj posledný (zobrazí sa prázdne pole)
+              // preskoč na ďalšieho kandidáta; ak už niet, nechaj posledný (zobrazí sa placeholder)
               setIdx((i) => (i + 1 < candidates.length ? i + 1 : i));
             }}
           />
@@ -88,3 +103,4 @@ export default function ProductCard({ product }: Props) {
     </div>
   );
 }
+
