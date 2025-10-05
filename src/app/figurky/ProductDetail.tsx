@@ -21,7 +21,6 @@ export default function ProductDetail() {
   const location = useLocation() as { state?: { product?: DetailPayload } };
   const product = location.state?.product;
 
-  // === KOŠÍK – presne podľa tvojho CartContextu
   const { add } = useCart();
 
   if (!product) {
@@ -72,7 +71,7 @@ export default function ProductDetail() {
       {/* obsah */}
       <section className="mx-auto max-w-7xl px-4 pb-24">
         <div className="grid grid-cols-12 gap-10 items-start">
-          {/* ĽAVO – galéria + UPOZORNENIE POD FOTOM */}
+          {/* ĽAVO – galéria + upozornenia */}
           <div className="col-span-12 lg:col-span-6">
             <div className="rounded-3xl ring-1 ring-white/10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] bg-[#0b152a]">
               <div className="h-[60vh] md:h-[70vh] w-full overflow-hidden rounded-3xl">
@@ -84,7 +83,6 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            {/* náhľady – horizontálny film */}
             {images.length > 1 && (
               <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
                 {images.map((src, i) => (
@@ -105,7 +103,7 @@ export default function ProductDetail() {
               </div>
             )}
 
-            {/* ⚠️ UPOZORNENIA – priamo pod fotkami (silné, komplet) */}
+            {/* Bezpečnostné upozornenia (ľavý stĺpec) */}
             <div className="mt-6 rounded-2xl border border-amber-400/40 bg-amber-400/10 p-5 text-amber-100">
               <p className="font-bold tracking-wide flex items-center gap-2">
                 <span className="inline-block text-xl">⚠️</span>
@@ -116,17 +114,17 @@ export default function ProductDetail() {
                 <li><span className="font-semibold">Nevhodné pre deti do 3 rokov</span> (choking hazard).</li>
                 <li>Používajte pod dohľadom dospelej osoby. Nenechávajte dieťa s výrobkom bez dozoru.</li>
                 <li>Nekúsajte a nevkladajte do úst. Výrobok nie je určený na kontakt s potravinami.</li>
-                <li>Môžu sa vyskytnúť tvrdé hrany alebo tenké, pružné časti – hrozí <span className="font-semibold">poranenie</span> pri nevhodnom použití.</li>
-                <li>Materiál PLA sa môže pri vyšších teplotách zdeformovať – <span className="font-semibold">nevystavujte teplu</span> (auto na priamom slnku, radiátor, rúra, plameň).</li>
+                <li>Môžu sa vyskytnúť tvrdé hrany alebo tenké, pružné časti – hrozí <span className="font-semibold">poranenie</span>.</li>
+                <li>Materiál PLA sa môže pri vyšších teplotách zdeformovať – <span className="font-semibold">nevystavujte teplu</span>.</li>
                 <li>Držte mimo zdrojov ohňa a vysokých teplôt. Produkt je horľavý.</li>
                 <li>Čistite jemne vlhkou handričkou, bez agresívnych chemikálií a rozpúšťadiel.</li>
-                <li>Pri poškodení alebo prasknutí výrobok okamžite prestaňte používať a zlikvidujte.</li>
-                <li>Farby a drobné detaily sa môžu kus od kusa mierne líšiť.</li>
+                <li>Pri poškodení výrobok prestaňte používať a zlikvidujte.</li>
+                <li>Farby a drobné detaily sa môžu kus od kusa líšiť.</li>
               </ul>
             </div>
           </div>
 
-          {/* PRAVO – text + CTA */}
+          {/* PRAVO – text + CTA + (menší) právny box */}
           <div className="col-span-12 lg:col-span-6">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-sm">
               {product.title}
@@ -148,7 +146,6 @@ export default function ProductDetail() {
 
             <div className="my-8 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-            {/* množstvo + CTA v jednom riadku */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               <div className="inline-flex items-center rounded-full bg-white/10 ring-1 ring-white/20">
                 <button
@@ -199,12 +196,24 @@ export default function ProductDetail() {
                 ← Naspäť na Figúrky
               </Link>
             </div>
+
+            {/* 🔸 PRÁVNY DISKLAJMER – menší box vpravo */}
+            <div className="mt-8 max-w-md rounded-lg border border-white/15 bg-white/5 p-4">
+              <h3 className="text-white/80 font-semibold mb-1 text-sm">Právne upozornenie</h3>
+              <p className="text-xs leading-relaxed text-white/70">
+                Tieto 3D tlačené hračky neboli predmetom hodnotenia a schválenia príslušného kontrolného orgánu
+                v zmysle platných právnych predpisov o bezpečnosti hračiek. Kupujúci preberá plnú zodpovednosť
+                za akékoľvek riziká spojené s používaním týchto hračiek, vrátane akýchkoľvek škôd alebo zranení,
+                ktoré by mohli vzniknúť v súvislosti s ich použitím.
+              </p>
+            </div>
           </div>
         </div>
       </section>
     </main>
   );
 }
+
 
 
 
