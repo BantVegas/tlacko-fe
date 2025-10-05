@@ -1,3 +1,4 @@
+// src/app/figurky/page.tsx
 import React from "react";
 import ProductCard from "@/components/ProductCard";
 import { fbUrl } from "@/lib/img";
@@ -5,24 +6,34 @@ import TekvickovaFigurka from "@/boxes/box-tekvickova-figurka";
 
 export default function FigurkyPage() {
   const products = [TekvickovaFigurka];
+  const heroUrl = fbUrl("images/hero.png"); // bez úvodného "/" – fbUrl ho pridá správne
 
   return (
-    <div
-      className="min-h-screen pt-32 px-6"
+    <main
+      className="min-h-screen relative"
       style={{
-        backgroundImage: `url('${fbUrl("/images/hero.png")}')`,
+        backgroundImage: `url("${heroUrl}")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
       }}
     >
-      <h1 className="text-3xl font-bold text-blue-800 mb-8 drop-shadow-lg">Figúrky</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-        {products.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
-      </div>
-    </div>
+      {/* stmavovací overlay – nad pozadím */}
+      <div className="absolute inset-0 bg-black/70 z-0" />
+
+      {/* obsah nad overlayom */}
+      <section className="relative z-10 px-6 pt-28 pb-12">
+        <h1 className="text-3xl font-bold text-white drop-shadow-lg mb-8">
+          Figúrky
+        </h1>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+          {products.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }
 

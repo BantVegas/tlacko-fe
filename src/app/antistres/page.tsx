@@ -1,6 +1,7 @@
 import React from "react";
 import ProductCard from "@/components/ProductCard";
-import { useCart } from "@/components/CartContext"; // Pre výpis obsahu košíka (debug)
+import { useCart } from "@/components/CartContext";
+import { fbUrl } from "@/lib/img"; // ⬅️ Firebase URL helper
 
 const products = [
   { id: 1, name: "Antistres gulička", desc: "Na kľúčiky, do ruky, na stôl.", price: "6€", image: "/images/placeholder.png" },
@@ -14,21 +15,25 @@ const products = [
 ];
 
 export default function AntistresPage() {
-  const { state } = useCart(); // Pre zobrazenie košíka
+  const { state } = useCart();
+
+  // Hero pozadie cez Firebase (VITE_IMG_BASE) alebo default bucket
+  const heroUrl = fbUrl("/images/hero.png");
 
   return (
     <div
       className="min-h-screen pt-32 px-6"
       style={{
-        backgroundImage: "url('/images/hero.png')",
+        backgroundImage: `url('${heroUrl}')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
       }}
     >
       <h1 className="text-3xl font-bold text-blue-800 mb-8 drop-shadow-lg">Antistres</h1>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-        {products.map(prod => (
+        {products.map((prod) => (
           <ProductCard key={prod.id} product={prod} />
         ))}
       </div>
@@ -40,7 +45,7 @@ export default function AntistresPage() {
           <div className="text-gray-600">Košík je prázdny.</div>
         ) : (
           <ul className="list-disc pl-6">
-            {state.items.map(item => (
+            {state.items.map((item) => (
               <li key={item.id} className="mb-1">
                 <span className="font-semibold">{item.name}</span> x {item.qty} &ndash; {item.price}€
               </li>
@@ -51,3 +56,4 @@ export default function AntistresPage() {
     </div>
   );
 }
+
