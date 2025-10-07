@@ -1,3 +1,161 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* --- Gradientové nočné pozadie s jemnou mriežkou a šumom --- */
+:root {
+  --bg1: #0b1020; /* night-900 */
+  --bg2: #0f1a2b; /* night-800 */
+  --bg3: #14233b; /* night-700 */
+
+  --glow1: #6c6dff; /* neon-500 */
+  --glow2: #1aa7f2; /* brand-500 */
+
+  /* Neon zelená paleta */
+  --neon-a: #00ffa3;
+  --neon-b: #00e676;
+  --neon-c: #1affb6;
+}
+
+/* Full-screen multilayer background */
+.site-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(108,109,255,0.15), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, rgba(26,167,242,0.15), transparent 60%),
+    radial-gradient(700px 400px at 50% 120%, rgba(26,167,242,0.10), transparent 60%),
+    linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 40%, var(--bg3) 100%);
+}
+
+/* Jemná mriežka (subtílna) */
+.site-grid::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -9;
+  opacity: .14;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+}
+
+/* Noise overlay */
+.site-noise::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -8;
+  opacity: .08;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAAVklEQVR4nO3BMQEAAADCIPunf2FhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPg4s6gAATm0y0IAAAAASUVORK5CYII=");
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Sklenené karty */
+.glass {
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: var(--shadow-glass, 0 10px 40px rgba(0,0,0,0.35));
+  backdrop-filter: blur(8px);
+}
+
+/* Hover ring s jemným žiarením */
+.hover-glow {
+  transition: box-shadow .25s ease, transform .25s ease, border-color .25s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 0 2px rgba(108,109,255,.35), 0 10px 30px rgba(26,167,242,.25);
+  transform: translateY(-2px);
+}
+
+/* Sklenený navbar */
+.nav-glass {
+  background: linear-gradient(to bottom, rgba(14,18,34,0.75), rgba(14,18,34,0.45));
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(12px);
+}
+
+/* ===================== */
+/*  NEÓNOVÝ OKRAJ KARIET */
+/* ===================== */
+
+/* príprava na efekt – halo sa nedostane dovnútra */
+.edge-neon {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Ostrý ZELENÝ neón – iba HRANA, výplň karty sa nemení */
+.edge-neon--green::before {
+  content: "";
+  position: absolute;
+  inset: 0;                 /* presne na hrane */
+  border-radius: inherit;
+  padding: 2px;            /* hrúbka rámu (1.5–3px je sweet spot) */
+  background: linear-gradient(90deg, var(--neon-a), var(--neon-b) 40%, var(--neon-c) 60%, var(--neon-a));
+  /* maska nechá len okraj, nie výplň */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+  filter: drop-shadow(0 0 12px rgba(0,255,163,.55));
+}
+
+/* Jemné rozliatie svetla tesne MIMO hrany (nie cez výplň) */
+.edge-neon--green::after {
+  content: "";
+  position: absolute;
+  inset: -10px;            /* tesne mimo okraja – väčší halo = viac „neon“ */
+  border-radius: inherit;
+  pointer-events: none;
+  filter: blur(18px);
+  box-shadow:
+    0 0 22px rgba(0, 255, 163, .70),
+    0 0 44px rgba(0, 255, 163, .45),
+    0 0 70px rgba(0, 255, 163, .25);
+  opacity: 1;
+  z-index: 0;
+}
+
+/* Animovaný „sweep“ po okraji (len hrana, nie výplň) */
+.edge-neon-animate.edge-neon--green::before {
+  background-size: 300% 100%;
+  animation: neonSweep 3.2s linear infinite;
+}
+@keyframes neonSweep {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+/* Interakcia karty: vyletí + mierne sa zväčší (bez zmeny layoutu) */
+.card-interactive {
+  transform: translateZ(0);
+  will-change: transform, box-shadow, filter;
+  transition: transform .28s ease, filter .28s ease, box-shadow .28s ease;
+}
+.card-interactive:hover {
+  transform: translateY(-8px) scale(1.025);
+  box-shadow:
+    0 16px 50px rgba(0,0,0,.45),
+    0 0 0 1px rgba(255,255,255,.06) inset;
+}
+
+/* Silnejší halo pri hovere, ak používateľ nemá reduced-motion */
+@media (prefers-reduced-motion: no-preference) {
+  .edge-neon--green:hover::after {
+    filter: blur(22px);
+    box-shadow:
+      0 0 28px rgba(0, 255, 163, .9),
+      0 0 64px rgba(0, 255, 163, .55),
+      0 0 96px rgba(0, 255, 163, .35);
+  }
+}
+

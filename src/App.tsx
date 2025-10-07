@@ -15,105 +15,106 @@ import Podmienky from "@/components/Podmienky";
 import Kontakt from "@/components/Kontakt";
 import CartPage from "./app/cart/page";
 
-// ⬇️ Checkout stránky
 import Success from "./app/checkout/Success";
 import Cancel from "./app/checkout/Cancel";
 import Pending from "./app/checkout/Pending";
 
-// ⬇️ Blog a O nás
 import Blog from "@/components/blog";
 import Onas from "@/components/onas";
 
-// ⬇️ Detail produktu (figúrky)
 import ProductDetail from "./app/figurky/ProductDetail";
 
-/* ---------- Firebase image helper (rovnaký princíp ako v ProductCard) ---------- */
+/* ---------- Helper pre inde v appke (ponechávam) ---------- */
 const ENV_BASE = import.meta.env.VITE_IMG_BASE ?? "";
 const DEFAULT_BASE =
   "https://firebasestorage.googleapis.com/v0/b/tlacko-fe.firebasestorage.app/o";
 const BASE_IMG = ENV_BASE || DEFAULT_BASE;
-
-/** Bezpečne spraví public Firebase URL z relatívnej cesty (napr. "/images/hero.png") */
 function fbUrl(p?: string): string {
   if (!p) return "";
-  if (/^https?:\/\//i.test(p)) return p;         // už absolútna URL
-  const path = p.replace(/^\//, "");              // zahoď leading slash
+  if (/^https?:\/\//i.test(p)) return p;
+  const path = p.replace(/^\//, "");
   return `${BASE_IMG}/${encodeURIComponent(path)}?alt=media`;
 }
-/* ------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------- */
 
 function HomeContent() {
-  const firstRow = [
-    { title: "Zvieratko", desc: "Roztomilé 3D hračky pre najmenších.", icon: "🦊", path: "/app/zvieratka" },
-    { title: "Antistres", desc: "Pomôcky na odbúranie stresu.", icon: "🧘", path: "/app/antistres" },
-    { title: "Autíčka", desc: "Originálne autíčka podľa výberu.", icon: "🚗", path: "/app/auticka" },
-  ];
-  const secondRow = [
-    { title: "Dekorácie", desc: "Vytlačené dekorácie do detskej izby.", icon: "🖼️", path: "/app/dekoracie" },
-    { title: "Figúrky", desc: "Hrdinovia do zbierky aj na hranie.", icon: "🦸", path: "/app/figurky" },
+  const categories = [
+    { title: "Zvieratko", desc: "Roztomilé 3D hračky.", icon: "🦊", path: "/app/zvieratka" },
+    { title: "Antistres", desc: "Pomôcky na oddych.", icon: "🧘", path: "/app/antistres" },
+    { title: "Autíčka",  desc: "Originálne modely.", icon: "🚗", path: "/app/auticka" },
+    { title: "Dekorácie",desc: "Dekor a doplnky.",  icon: "🖼️", path: "/app/dekoracie" },
+    { title: "Figúrky",  desc: "Do zbierky a na hranie.", icon: "🧑‍🎤", path: "/app/figurky" },
   ];
 
-  // Hero pozadie – už z Firebase Storage
-  const heroUrl = fbUrl("/images/hero.png");
+  // mierne menšia karta, ale stále výrazná; neon kraje + interakcia ostávajú
+  const cardCls =
+    "edge-neon edge-neon--green edge-neon-animate card-interactive " +
+    "rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-slate-200 " +
+    "shadow-[0_10px_30px_rgba(0,0,0,0.30)] " +
+    "flex flex-col items-center justify-center text-center " +
+    "h-[150px] md:h-[156px] px-6";
 
   return (
     <div
-      className="min-h-screen flex flex-col relative"
-      style={{
-        backgroundImage: `url('${heroUrl}')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
-      }}
+      className="relative text-slate-200"
+      // nechávam o pár px viac rezervy (nav ~64, footer ~56–60)
+      style={{ height: "calc(100dvh - 68px - 60px)" }}
     >
-      <div className="absolute inset-0 bg-black/70 -z-10" />
-      <section className="pt-32 pb-16 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold text-white drop-shadow-lg mb-4">
-          3D tlačené hračky
-        </h1>
-        <p className="text-2xl md:text-3xl text-white drop-shadow mb-2">
-          Objavte svet 3D tlače a unikátne hračky pre každého!
-        </p>
-      </section>
+      {/* pozadie */}
+      <div
+        className="absolute inset-0 -z-20"
+        style={{
+          background: "linear-gradient(160deg,#0B1020 0%, #0F1A2B 45%, #14233B 100%)",
+        }}
+      />
 
-      <section className="relative z-10 py-8 px-2 md:px-0">
-        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {firstRow.map((item, idx) => (
+      {/* obsah: kompaktnejší hero + flex wrap grid, extra spodná rezerva pre neon */}
+      <div className="h-full mx-auto max-w-7xl px-5 sm:px-6 lg:px-8 grid grid-rows-[auto,1fr] gap-4 md:gap-6 pb-6">
+        {/* HERO – menej zvislého priestoru */}
+        <header className="pt-8 text-center">
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-white">
+            Objav svet <span className="text-indigo-300">3D tlače</span>
+          </h1>
+          <p className="mt-3 text-sm sm:text-base text-slate-300/90 max-w-2xl mx-auto">
+            Figúrky, zvieratká, autíčka a dekorácie. Upozornenia sú priamo pri produktoch.
+          </p>
+          <div className="mt-5 flex items-center justify-center gap-3">
             <Link
-              key={idx}
-              to={item.path}
-              className="backdrop-blur-xl bg-white/50 border border-white/30 rounded-2xl shadow-xl p-6 flex flex-col items-center min-h-[230px] transition hover:scale-105 hover:bg-white/70 cursor-pointer no-underline"
-              style={{ boxShadow: "0 8px 32px 0 rgba(31,38,135,0.17)" }}
+              to="/app/zvieratka"
+              className="rounded-xl px-4 py-2.5 font-semibold border border-white/15 bg-white/10 backdrop-blur-md hover:bg-white/15 hover:border-white/25 transition"
             >
-              <div className="text-4xl mb-2">{item.icon}</div>
-              <h3 className="text-xl font-bold text-blue-800 mb-1">{item.title}</h3>
-              <p className="text-gray-700 text-center mb-4">{item.desc}</p>
+              Prezrieť kolekciu
             </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="relative z-10 py-4 px-2 md:px-0">
-        <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8">
-          {secondRow.map((item, idx) => (
             <Link
-              key={idx}
-              to={item.path}
-              className="backdrop-blur-xl bg-white/50 border border-white/30 rounded-2xl shadow-xl p-6 flex flex-col items-center min-h-[230px] transition hover:scale-105 hover:bg-white/70 cursor-pointer no-underline"
-              style={{ boxShadow: "0 8px 32px 0 rgba(31,38,135,0.17)" }}
+              to="/onas"
+              className="rounded-xl px-4 py-2.5 font-semibold border border-white/10 hover:border-white/25 hover:bg-white/5 transition"
             >
-              <div className="text-4xl mb-2">{item.icon}</div>
-              <h3 className="text-xl font-bold text-blue-800 mb-1">{item.title}</h3>
-              <p className="text-gray-700 text-center mb-4">{item.desc}</p>
+              O značke
             </Link>
-          ))}
-        </div>
-      </section>
+          </div>
+        </header>
 
-      <div className="flex-grow" />
+        {/* KARTY – menšie medzery a šírky, posledný riadok centrovaný; spodná medzera drží neon nad footerom */}
+        <section className="self-stretch">
+          <div className="flex flex-wrap justify-center gap-5 md:gap-6">
+            {categories.map((c) => (
+              <Link
+                key={c.title}
+                to={c.path}
+                className={`${cardCls} w-full sm:w-[320px] md:w-[340px] lg:w-[360px]`}
+              >
+                <div className="text-3xl mb-1">{c.icon}</div>
+                <div className="text-white font-semibold">{c.title}</div>
+                <div className="text-slate-300 text-sm">{c.desc}</div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
+
 
 export default function App() {
   return (
@@ -127,25 +128,23 @@ export default function App() {
           <Route path="/app/auticka" element={<AutickaPage />} />
           <Route path="/app/dekoracie" element={<DekoraciePage />} />
           <Route path="/app/figurky" element={<FigurkyPage />} />
-
-          {/* DETAIL PRODUKTU (figúrky) */}
-          <Route path="/app/figurky/:slug" element={<ProductDetail />} />
           <Route path="/app/zvieratka" element={<ZvieratkaPage />} />
           <Route path="/app/zvieratka/froggy-fun" element={<FroggyFunPage />} />
 
-          {/* Statické stránky */}
+          {/* Detail produktu */}
+          <Route path="/app/figurky/:slug" element={<ProductDetail />} />
+
+          {/* Statické */}
           <Route path="/gdpr" element={<Gdpr />} />
           <Route path="/podmienky" element={<Podmienky />} />
           <Route path="/kontakt" element={<Kontakt />} />
-
-          {/* Blog & O nás */}
           <Route path="/blog" element={<Blog />} />
           <Route path="/onas" element={<Onas />} />
 
           {/* Košík */}
           <Route path="/cart" element={<CartPage />} />
 
-          {/* Checkout výsledky */}
+          {/* Checkout */}
           <Route path="/checkout/success" element={<Success />} />
           <Route path="/checkout/cancel" element={<Cancel />} />
           <Route path="/checkout/pending" element={<Pending />} />
@@ -154,6 +153,8 @@ export default function App() {
     </CartProvider>
   );
 }
+
+
 
 
 
